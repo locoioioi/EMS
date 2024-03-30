@@ -3,12 +3,15 @@ package com.employee_management_system.EMS.dto.project;
 import com.employee_management_system.EMS.entity.Department;
 import com.employee_management_system.EMS.entity.Employee;
 import com.employee_management_system.EMS.entity.Project;
+import com.employee_management_system.EMS.helper.ObjectGenerator;
 import com.employee_management_system.EMS.repository.DepartmentRepository;
 import com.employee_management_system.EMS.repository.EmployeeRepository;
 import com.employee_management_system.EMS.utils.ProjectStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -17,7 +20,9 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Optional;
 
+import static com.employee_management_system.EMS.helper.ObjectGenerator.getEmployee;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -30,6 +35,11 @@ class ProjectMapperTest {
     @InjectMocks
     private ProjectMapper projectMapper;
 
+    @Captor
+    ArgumentCaptor<Integer> employeeIdCaptor;
+    @Captor
+    ArgumentCaptor<Integer> departmentIdCaptor;
+
     @BeforeEach
     void setUp() {
         projectMapper = new ProjectMapper(departmentRepository,employeeRepository);
@@ -37,29 +47,11 @@ class ProjectMapperTest {
 
     @Test
     void toDto() {
-        Employee employee = new Employee(
-                1,"Loc","Truong",null,null,null,null,null,null,null);
+        Employee employee = getEmployee();
 
-        Department department = new Department(
-                1,
-                "Landmark1",
-                employee,
-                new HashSet<>(),
-                new HashSet<>()
-        );
-        Project project = new Project(
-                1,
-                "E-commerce",
-                ProjectStatus.INITIALIZE,
-                LocalDateTime.now(),
-                employee,
-                new HashSet<>(),
-                department,
-                new HashSet<>(),
-                new HashSet<>()
-        );
-        project.getEmployees().add(employee);
-        department.getProjects().add(project);
+        Department department = ObjectGenerator.getDepartment(employee);
+
+        Project project = ObjectGenerator.getProject(employee,department);
 
         ProjectDTO dto = projectMapper.toDto(project);
 
@@ -73,19 +65,12 @@ class ProjectMapperTest {
 
     @Test
     void toProject() {
-        Employee employee = new Employee(
-                1,"Loc","Truong",null,null,null,null,null,null,null);
+        Employee employee = ObjectGenerator.getEmployee();
 
-        Department department = new Department(
-                1,
-                "Landmark1",
-                employee,
-                new HashSet<>(),
-                new HashSet<>()
-        );
+        Department department = ObjectGenerator.getDepartment(employee);
 
-        when(employeeRepository.findById(employee.getId())).thenReturn(Optional.of(employee));
-        when(departmentRepository.findById(department.getId())).thenReturn(Optional.of(department));
+        when(employeeRepository.findById(anyInt())).thenReturn(Optional.of(employee));
+        when(departmentRepository.findById(anyInt())).thenReturn(Optional.of(department));
 
         ProjectDTO projectDTO = new ProjectDTO(
                 1,
@@ -100,11 +85,15 @@ class ProjectMapperTest {
 
         Project project = projectMapper.toProject(projectDTO);
 
-        verify(employeeRepository).findById(employee.getId());
-        verify(departmentRepository).findById(department.getId());
+        verify(employeeRepository).findById(employeeIdCaptor.capture());
+        verify(departmentRepository).findById(departmentIdCaptor.capture());
 
+        assertEquals(employee.getId(), employeeIdCaptor.getValue().longValue());
+        assertEquals(department.getId(), departmentIdCaptor.getValue().longValue());
         assertEquals(project.getName(),projectDTO.getName());
         assertEquals(project.getTasks().size(),projectDTO.getNumberOfTasks());
         assertEquals(project.getDepartment().getId(),projectDTO.getDepartmentId());
+        assertEquals(project.getEmployees().size(),projectDTO.getNumberOfEmployees());
+        assertEquals(project.getStatus().getState(),projectDTO.getStatus());
     }
 }
