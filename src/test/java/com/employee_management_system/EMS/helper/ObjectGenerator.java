@@ -3,6 +3,7 @@ package com.employee_management_system.EMS.helper;
 import com.employee_management_system.EMS.entity.Department;
 import com.employee_management_system.EMS.entity.Employee;
 import com.employee_management_system.EMS.entity.Project;
+import com.employee_management_system.EMS.entity.User;
 import com.employee_management_system.EMS.utils.ProjectStatus;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,16 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 @Service
 public class ObjectGenerator {
+    public static User getUser() {
+        return new User(
+                1,
+                "user1",
+                "pass1",
+                "user1@gmail.com",
+                null,
+                new HashSet<>()
+        );
+    }
     public static Employee getEmployee() {
         return new Employee(
                 1,"Loc","Truong",null,null,null,null,null,null,null);
