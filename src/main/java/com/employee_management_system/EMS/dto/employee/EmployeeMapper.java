@@ -6,9 +6,11 @@ import com.employee_management_system.EMS.entity.User;
 import com.employee_management_system.EMS.repository.DepartmentRepository;
 import com.employee_management_system.EMS.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 
+@Service
 @RequiredArgsConstructor
 public class EmployeeMapper {
     private final DepartmentRepository departmentRepository;

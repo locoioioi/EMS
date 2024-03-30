@@ -7,10 +7,12 @@ import com.employee_management_system.EMS.repository.DepartmentRepository;
 import com.employee_management_system.EMS.repository.EmployeeRepository;
 import com.employee_management_system.EMS.utils.ProjectStatus;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 
+@Service
 @RequiredArgsConstructor
 public class ProjectMapper {
     private final DepartmentRepository departmentRepository;
