@@ -28,7 +28,7 @@ public class Project {
     @Column(name = "status")
     private ProjectStatus status;
 
-    @Column(name = "startDate")
+    @Column(name = "start_date")
     private LocalDateTime startDate;
 
     @OneToOne(
