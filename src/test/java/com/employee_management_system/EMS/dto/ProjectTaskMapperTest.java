@@ -64,9 +64,7 @@ class ProjectTaskMapperTest {
 
         ProjectTask projectTask = ObjectGenerator.getProjectTask(null,project);
 
-        Exception exception = assertThrows(InvalidDtoException.class, () -> {
-            projectTaskMapper.toDto(projectTask);
-        });
+        Exception exception = assertThrows(InvalidDtoException.class, () -> projectTaskMapper.toDto(projectTask));
 
         assertTrue(exception.getMessage().contains("Employee is null. "));
     }
@@ -74,14 +72,10 @@ class ProjectTaskMapperTest {
     @Test
     void toDto_WithNullProject_ThrowsInvalidProjectTaskException() {
         Employee employee = ObjectGenerator.getEmployee();
-        Department department = ObjectGenerator.getDepartment(employee);
-        Project project = ObjectGenerator.getProject(employee, department);
 
         ProjectTask projectTask = ObjectGenerator.getProjectTask(employee,null);
 
-        Exception exception = assertThrows(InvalidDtoException.class, () -> {
-            projectTaskMapper.toDto(projectTask);
-        });
+        Exception exception = assertThrows(InvalidDtoException.class, () -> projectTaskMapper.toDto(projectTask));
 
         assertTrue(exception.getMessage().contains("Project is null. "));
     }
@@ -97,9 +91,7 @@ class ProjectTaskMapperTest {
 
        projectTask.setStatus(null);
 
-        Exception exception = assertThrows(InvalidDtoException.class, () -> {
-            projectTaskMapper.toDto(projectTask);
-        });
+        Exception exception = assertThrows(InvalidDtoException.class, () -> projectTaskMapper.toDto(projectTask));
 
         assertTrue(exception.getMessage().contains("Status is null. "));
     }
