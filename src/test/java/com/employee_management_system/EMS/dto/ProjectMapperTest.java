@@ -1,5 +1,7 @@
-package com.employee_management_system.EMS.dto.project;
+package com.employee_management_system.EMS.dto;
 
+import com.employee_management_system.EMS.dto.project.ProjectDTO;
+import com.employee_management_system.EMS.dto.project.ProjectMapper;
 import com.employee_management_system.EMS.entity.Department;
 import com.employee_management_system.EMS.entity.Employee;
 import com.employee_management_system.EMS.entity.Project;

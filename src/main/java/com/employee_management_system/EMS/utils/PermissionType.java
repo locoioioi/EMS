@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum PermissionType {
     View("view"), Edit("edit"), Comment("comment");
 
-    private String type;
+    private final String type;
 
     PermissionType(String type) {
         this.type = type;

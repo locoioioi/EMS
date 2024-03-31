@@ -1,5 +1,7 @@
-package com.employee_management_system.EMS.dto.employee;
+package com.employee_management_system.EMS.dto;
 
+import com.employee_management_system.EMS.dto.employee.EmployeeDTO;
+import com.employee_management_system.EMS.dto.employee.EmployeeMapper;
 import com.employee_management_system.EMS.entity.Department;
 import com.employee_management_system.EMS.entity.Employee;
 import com.employee_management_system.EMS.entity.User;
