@@ -3,10 +3,13 @@ package com.employee_management_system.EMS.helper;
 import com.employee_management_system.EMS.entity.*;
 import com.employee_management_system.EMS.utils.PermissionType;
 import com.employee_management_system.EMS.utils.ProjectStatus;
+import com.employee_management_system.EMS.utils.TaskStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Locale;
+
 @Service
 public class ObjectGenerator {
     public static ProjectPermission getProjectPermission(Employee employee,Project project) {
@@ -39,6 +42,17 @@ public class ObjectGenerator {
                 employee,
                 new HashSet<>(),
                 new HashSet<>()
+        );
+    }
+    public static ProjectTask getProjectTask(Employee employee,Project project) {
+        return new ProjectTask(
+                1,
+                "Read documentation",
+                LocalDateTime.of(2024, 3,11,11,11),
+                LocalDateTime.of(2024,4,15,11,11),
+                TaskStatus.Working,
+                employee,
+                project
         );
     }
     public static Project getProject(Employee employee, Department department) {
