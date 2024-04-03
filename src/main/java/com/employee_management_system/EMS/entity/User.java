@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "app_user")
 public class User {
     @Id
     @Column(name = "user_id")
@@ -33,7 +34,7 @@ public class User {
     @NotNull(message = "Email can not be null")
     private String email;
 
-    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private Employee employeeInformation;
 
     @ManyToMany(

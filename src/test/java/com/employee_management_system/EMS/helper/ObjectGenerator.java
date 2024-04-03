@@ -29,9 +29,9 @@ public class ObjectGenerator {
     }
     public static User getUser() {
         return new User(
-                1,
-                "user1",
-                "pass1",
+                0,
+                "userasdasdasd1",
+                "passasdasdad1",
                 "user1@gmail.com",
                 null,
                 new ArrayList<>()
@@ -39,7 +39,7 @@ public class ObjectGenerator {
     }
     public static Employee getEmployee() {
         return new Employee(
-                1,"Loc","Truong",null,null,null,null,null,null,null);
+                0,"Loc","Truong",null,null,null,null,null,null,null);
     }
 
     public static Department getDepartment(Employee employee) {

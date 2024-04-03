@@ -7,21 +7,22 @@ import com.employee_management_system.EMS.entity.Employee;
 import com.employee_management_system.EMS.entity.Role;
 import com.employee_management_system.EMS.entity.User;
 import com.employee_management_system.EMS.exception.InvalidDtoException;
-import com.employee_management_system.EMS.repository.EmployeeRepository;
 import com.employee_management_system.EMS.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
+@Service
 @RequiredArgsConstructor
 public class UserMapper {
     private final RoleMapper roleMapper;
     private final EmployeeMapper employeeMapper;
     private final RoleRepository roleRepository;
     public UserDTO toDto(User user) {
+        System.out.println("here");
         List<RoleDTO> roleDTOS = user.getRoles().stream().map(roleMapper::toDto).toList();
-
+        System.out.println(user.getEmployeeInformation().getId());
+        System.out.println("here");
         return new UserDTO(
                 user.getId(),
                 user.getUsername(),
@@ -42,7 +43,7 @@ public class UserMapper {
         Employee employee = employeeMapper.toEmployee(user.getEmployee());
 
         return new User(
-            user.getUserId(),
+            0,
             user.getUsername(),
             user.getPassword(),
             user.getEmail(),

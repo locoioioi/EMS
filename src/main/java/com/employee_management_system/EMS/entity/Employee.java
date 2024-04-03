@@ -27,7 +27,7 @@ public class Employee {
     @NotNull(message = "Last name can not be empty")
     private String lastName;
 
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
