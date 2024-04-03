@@ -2,10 +2,11 @@ package com.employee_management_system.EMS.dto.role;
 
 import com.employee_management_system.EMS.entity.Role;
 import com.employee_management_system.EMS.exception.InvalidDtoException;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
+@Service
 public class RoleMapper {
     public RoleDTO toDto(Role role) {
         if (role.getName() == null || role.getName().isEmpty()) {

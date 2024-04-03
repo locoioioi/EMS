@@ -46,4 +46,23 @@ class UserRepositoryTest {
         // then
         assertThat(found).isNull();
     }
+
+    @Test
+    public void whenFindByEmployeeInformation_Id_thenReturnUser() {
+        // given
+        Employee employee = ObjectGenerator.getEmployee();
+        employee.setId(0);
+        User user = new User(0,"asdqsdasdas","asdasdasd","baoloctruong@gmail.com",employee,new ArrayList<>());
+        employee.setUser(user);
+
+        user = entityManager.persistAndFlush(user);
+
+        // when
+        User found = userRepository.findByEmployeeInformation_Id(employee.getId());
+
+        // then
+        assertThat(found).isNotNull();
+        assertThat(found.getId()).isEqualTo(user.getId());
+        assertEquals(found.getEmployeeInformation().getId(),employee.getId());
+    }
 }
