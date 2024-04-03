@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -60,19 +61,19 @@ public class Employee {
             joinColumns = @JoinColumn(name = "employee_id"),
             inverseJoinColumns = @JoinColumn(name = "project_id")
     )
-    private Set<Project> projects;
+    private List<Project> projects;
 
     @OneToMany(
             mappedBy = "employee",
             cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},
             fetch = FetchType.LAZY
     )
-    private Set<ProjectPermission> permissions;
+    private List<ProjectPermission> permissions;
 
     @OneToMany(
             mappedBy = "employee",
             cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},
             fetch = FetchType.LAZY
     )
-    private Set<ProjectTask> task;
+    private List<ProjectTask> task;
 }

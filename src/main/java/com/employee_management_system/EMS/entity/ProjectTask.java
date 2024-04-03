@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "project_task")
 public class ProjectTask {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
