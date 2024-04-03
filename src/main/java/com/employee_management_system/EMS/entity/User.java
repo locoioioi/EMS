@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "app_user")
 public class User {
     @Id
     @Column(name = "user_id")
