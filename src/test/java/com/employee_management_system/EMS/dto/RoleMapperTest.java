@@ -39,7 +39,7 @@ public class RoleMapperTest {
 
         assertThrows(InvalidDtoException.class, () -> roleMapper.toDto(role));
     }
-
+    @Test
     void testToRole_Success() {
         RoleDTO roleDTO = new RoleDTO(1,"Employee");
 

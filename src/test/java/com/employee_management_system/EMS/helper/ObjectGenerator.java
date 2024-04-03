@@ -7,7 +7,7 @@ import com.employee_management_system.EMS.utils.TaskStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Locale;
 
 @Service
@@ -16,7 +16,7 @@ public class ObjectGenerator {
         return new Role(
                 1,
                 "Employee",
-                new HashSet<>()
+                new ArrayList<>()
         );
     }
     public static ProjectPermission getProjectPermission(Employee employee,Project project) {
@@ -34,7 +34,7 @@ public class ObjectGenerator {
                 "pass1",
                 "user1@gmail.com",
                 null,
-                new HashSet<>()
+                new ArrayList<>()
         );
     }
     public static Employee getEmployee() {
@@ -47,8 +47,8 @@ public class ObjectGenerator {
                 1,
                 "Landmark1",
                 employee,
-                new HashSet<>(),
-                new HashSet<>()
+                new ArrayList<>(),
+                new ArrayList<>()
         );
     }
     public static ProjectTask getProjectTask(Employee employee,Project project) {
@@ -69,10 +69,10 @@ public class ObjectGenerator {
                 ProjectStatus.INITIALIZE,
                 LocalDateTime.now(),
                 employee,
-                new HashSet<>(),
+                new ArrayList<>(),
                 department,
-                new HashSet<>(),
-                new HashSet<>()
+                new ArrayList<>(),
+                new ArrayList<>()
         );
     }
 }

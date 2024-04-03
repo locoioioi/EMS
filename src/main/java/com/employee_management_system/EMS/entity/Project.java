@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Data
@@ -47,7 +47,7 @@ public class Project {
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "employee_id")
     )
-    private Set<Employee> employees;
+    private List<Employee> employees;
 
     @ManyToOne(
             cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
@@ -61,12 +61,12 @@ public class Project {
             cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
             fetch = FetchType.LAZY
     )
-    private Set<ProjectPermission> permissions;
+    private List<ProjectPermission> permissions;
 
     @OneToMany(
             mappedBy = "project",
             cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
             fetch = FetchType.LAZY
     )
-    private Set<ProjectTask> tasks;
+    private List<ProjectTask> tasks;
 }

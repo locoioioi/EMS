@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Optional;
 
@@ -45,7 +46,7 @@ class DepartmentMapperTest {
                 1,
                 "Landmark1",
                 employee,
-                new HashSet<>(),
+                new ArrayList<>(),
                 null
         );
         employee.setDepartment(department);

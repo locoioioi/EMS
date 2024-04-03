@@ -8,6 +8,7 @@ import com.employee_management_system.EMS.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 @Service
@@ -38,9 +39,9 @@ public class EmployeeMapper {
                 null,
                 null,
                 department,
-                new HashSet<>(),
-                new HashSet<>(),
-                new HashSet<>()
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>()
         );
     }
 }

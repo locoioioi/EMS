@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -35,7 +37,7 @@ public class ProjectMapper {
     public Project toProject(ProjectDTO projectDTO) {
         Department department = departmentRepository.findById(projectDTO.getDepartmentId()).orElseThrow(); // ? add exception later
         Employee employee = employeeRepository.findById(projectDTO.getEmployeeId()).orElseThrow(); // ? add exception later
-        Set<Employee> employees = new HashSet<>();
+        List<Employee> employees = new ArrayList<>();
         employees.add(employee);
         return new Project(
                 0,
@@ -45,8 +47,8 @@ public class ProjectMapper {
                 employee,
                 employees,
                 department,
-                new HashSet<>(),
-                new HashSet<>()
+                new ArrayList<>(),
+                new ArrayList<>()
         );
     }
 }

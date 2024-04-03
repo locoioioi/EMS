@@ -3,6 +3,7 @@ package com.employee_management_system.EMS.dto.role;
 import com.employee_management_system.EMS.entity.Role;
 import com.employee_management_system.EMS.exception.InvalidDtoException;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class RoleMapper {
@@ -21,7 +22,7 @@ public class RoleMapper {
         return new Role(
                 0,
                 roleDTO.getName(),
-                new HashSet<>()
+                new ArrayList<>()
         );
     }
 }
