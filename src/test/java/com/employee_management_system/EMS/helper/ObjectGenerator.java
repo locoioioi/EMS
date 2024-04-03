@@ -12,6 +12,13 @@ import java.util.Locale;
 
 @Service
 public class ObjectGenerator {
+    public static Role getRole() {
+        return new Role(
+                1,
+                "Employee",
+                new HashSet<>()
+        );
+    }
     public static ProjectPermission getProjectPermission(Employee employee,Project project) {
         return new ProjectPermission(
                 1,
