@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -34,4 +35,15 @@ public class Department {
 
     @OneToMany(mappedBy = "department", cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH}, fetch = FetchType.LAZY)
     private List<Project> projects;
+
+    public void addEmployee(Employee employee) {
+        if (employees == null) {
+            employees = new ArrayList<>();
+        }
+        employees.add(employee);
+    }
+
+    public void removeEmployee(Employee employee) {
+        employees.remove(employee);
+    }
 }

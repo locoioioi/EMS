@@ -3,16 +3,17 @@ package com.employee_management_system.EMS.entity;
 import com.employee_management_system.EMS.utils.ProjectStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Project {
@@ -69,4 +70,18 @@ public class Project {
             fetch = FetchType.LAZY
     )
     private List<ProjectTask> tasks;
+
+    public void addEmployee(Employee employee) {
+        if (employees == null) {
+            employees = new ArrayList<>();
+        }
+        employees.add(employee);
+    }
+
+    public void removeEmployee(Employee employee) {
+        if (this.employee == employee) {
+            this.employee = null;
+        }
+        employees.remove(employee);
+    }
 }

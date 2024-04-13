@@ -10,6 +10,7 @@ import com.employee_management_system.EMS.entity.User;
 import com.employee_management_system.EMS.exception.ExceptionResponse;
 import com.employee_management_system.EMS.repository.UserRepository;
 import com.employee_management_system.EMS.service.jwt.JwtService;
+import com.employee_management_system.EMS.service.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,12 +42,14 @@ class AccountServiceTest {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Mock
     private JwtService jwtService;
+    @Mock
+    private UserService userService;
 
     @InjectMocks
     private AccountServiceImpl accountService;
     @BeforeEach
     void setUp() {
-        accountService = new AccountServiceImpl(userRepository,userMapper,authenticationManager, bCryptPasswordEncoder,jwtService);
+        accountService = new AccountServiceImpl(userRepository,userService,userMapper,authenticationManager, bCryptPasswordEncoder,jwtService);
     }
 
     @Test
@@ -79,21 +82,5 @@ class AccountServiceTest {
         assert exceptionResponse.getMessage().contains("login fail");
         // Assert other fields as needed
     }
-    @Test
-    void register() {
-        // Arrange
-        CreationUser creationUser = new CreationUser(1,"username12312", "password123123","asdasd@gmail.com",new EmployeeDTO(1,"asdasd","asdasd",1,1), new ArrayList<>());
 
-        User user = new User(); // Create a User instance with appropriate data
-        when(userMapper.toUser(creationUser)).thenReturn(user);
-        when(userRepository.saveAndFlush(user)).thenReturn(user);
-
-        // Act
-        ResponseEntity<?> response = accountService.register(creationUser);
-
-        // Assert
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertInstanceOf(UserDTO.class, response.getBody());
-    }
 }

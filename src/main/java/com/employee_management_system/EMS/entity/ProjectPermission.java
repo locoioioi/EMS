@@ -27,4 +27,8 @@ public class ProjectPermission {
     @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
+
+    public void removeEmployee() {
+        employee = null;
+    }
 }

@@ -3,6 +3,7 @@ package com.employee_management_system.EMS.dto.employee;
 import com.employee_management_system.EMS.entity.Department;
 import com.employee_management_system.EMS.entity.Employee;
 import com.employee_management_system.EMS.entity.User;
+import com.employee_management_system.EMS.exception.EntityNotFoundException;
 import com.employee_management_system.EMS.repository.DepartmentRepository;
 import com.employee_management_system.EMS.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +29,12 @@ public class EmployeeMapper {
     }
 
     public Employee toEmployee(EmployeeDTO employeeDTO) {
-        Department department = departmentRepository.findById(employeeDTO.getDepartmentId()).orElseThrow(); // ? add exception later
-        User user = userRepository.findById(employeeDTO.getUserId()).orElseThrow(); // ? add exception later
+        Department department = departmentRepository.findById(employeeDTO.getDepartmentId()).orElseThrow(
+                () -> new EntityNotFoundException(Department.class, "this " + employeeDTO.getDepartmentId())
+        );
+        User user = userRepository.findById(employeeDTO.getUserId()).orElseThrow(
+                () -> new EntityNotFoundException(User.class, "this " + employeeDTO.getUserId())
+        );
 
         return new Employee(
                 0,
