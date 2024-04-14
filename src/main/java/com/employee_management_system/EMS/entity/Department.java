@@ -46,4 +46,8 @@ public class Department {
     public void removeEmployee(Employee employee) {
         employees.remove(employee);
     }
+
+    public void removeProject(Project project) {
+        projects.remove(project);
+    }
 }

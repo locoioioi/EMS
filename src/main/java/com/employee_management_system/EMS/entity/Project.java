@@ -59,14 +59,14 @@ public class Project {
 
     @OneToMany(
             mappedBy = "project",
-            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
     )
     private List<ProjectPermission> permissions;
 
     @OneToMany(
             mappedBy = "project",
-            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
     )
     private List<ProjectTask> tasks;

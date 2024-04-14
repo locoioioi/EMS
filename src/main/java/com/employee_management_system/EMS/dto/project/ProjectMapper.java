@@ -39,6 +39,7 @@ public class ProjectMapper {
         Employee employee = employeeRepository.findById(projectDTO.getEmployeeId()).orElseThrow(); // ? add exception later
         List<Employee> employees = new ArrayList<>();
         employees.add(employee);
+
         return new Project(
                 0,
                 projectDTO.getName(),
