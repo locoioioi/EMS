@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.parameters.P;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,5 +84,12 @@ public class Employee {
             projects = new ArrayList<>();
         }
         projects.add(project);
+    }
+
+    public void addPermission(ProjectPermission projectPermission) {
+        if (permissions == null) {
+            permissions = new ArrayList<>();
+        }
+        permissions.add(projectPermission);
     }
 }

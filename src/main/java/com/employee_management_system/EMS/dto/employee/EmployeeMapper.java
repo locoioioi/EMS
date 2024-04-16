@@ -32,15 +32,12 @@ public class EmployeeMapper {
         Department department = departmentRepository.findById(employeeDTO.getDepartmentId()).orElseThrow(
                 () -> new EntityNotFoundException(Department.class, "this " + employeeDTO.getDepartmentId())
         );
-        User user = userRepository.findById(employeeDTO.getUserId()).orElseThrow(
-                () -> new EntityNotFoundException(User.class, "this " + employeeDTO.getUserId())
-        );
 
         return new Employee(
                 0,
                 employeeDTO.getFirstName(),
                 employeeDTO.getLastName(),
-                user,
+                null,
                 null,
                 null,
                 department,

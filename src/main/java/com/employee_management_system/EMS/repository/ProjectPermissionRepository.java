@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProjectPermissionRepository extends JpaRepository<ProjectPermission,Integer> {
+    ProjectPermission getProjectPermissionByEmployee_IdAndProject_Id(int employeeId,int projectId);
 }

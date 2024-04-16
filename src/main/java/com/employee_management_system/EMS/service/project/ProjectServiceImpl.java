@@ -3,21 +3,19 @@ package com.employee_management_system.EMS.service.project;
 import com.employee_management_system.EMS.dto.project.CreationProject;
 import com.employee_management_system.EMS.dto.project.ProjectDTO;
 import com.employee_management_system.EMS.dto.project.ProjectMapper;
-import com.employee_management_system.EMS.entity.Department;
-import com.employee_management_system.EMS.entity.Employee;
-import com.employee_management_system.EMS.entity.Project;
-import com.employee_management_system.EMS.entity.ProjectTask;
+import com.employee_management_system.EMS.entity.*;
 import com.employee_management_system.EMS.exception.EntityNotFoundException;
 import com.employee_management_system.EMS.repository.EmployeeRepository;
 import com.employee_management_system.EMS.repository.ProjectRepository;
+import com.employee_management_system.EMS.utils.PermissionType;
 import com.employee_management_system.EMS.utils.ProjectStatus;
 import com.employee_management_system.EMS.utils.ProjectStatusConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
-
+@Service
 @RequiredArgsConstructor
 public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepository projectRepository;
@@ -34,12 +32,6 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Page<ProjectDTO> getAllByDepartmentId(int departmentId, int page, int size) {
         Page<Project> projects = projectRepository.findAllByDepartment_Id(departmentId, PageRequest.of(page,size));
-        return projects.map(projectMapper::toDto);
-    }
-
-    @Override
-    public Page<ProjectDTO> getAllByEmployeeId(int employeeId, int page, int size) {
-        Page<Project> projects = projectRepository.findAllByEmployees_employeeId(employeeId, PageRequest.of(page,size));
         return projects.map(projectMapper::toDto);
     }
 
@@ -88,5 +80,39 @@ public class ProjectServiceImpl implements ProjectService {
         return true;
     }
 
+    @Override
+    public boolean addEmployeeToProject(int projectId, int projectManagerId, int employeeId) {
+        Project project = getProject(projectId);
+        if (project.getEmployee().getId() != projectManagerId) {
+            // * check permission, only project manager can add employee.
+            return false;
+        }
+        Employee employee = employeeRepository.findById(employeeId).orElseThrow(
+                () -> new EntityNotFoundException(Employee.class,"this " + employeeId)
+        );
+        // * add employee to project.
+        project.addEmployee(employee);
+        employee.addProject(project);
+
+        // * create permission for employee (default permission is view)
+        ProjectPermission permission = new ProjectPermission(
+                0,
+                PermissionType.View,
+                employee,
+                project
+        );
+        project.addPermission(permission);
+        employee.addPermission(permission);
+
+        Project saved = projectRepository.saveAndFlush(project);
+
+        return saved.getPermissions().contains(permission) && saved.getEmployees().contains(employee);
+    }
+
+    private Project getProject(int projectId) {
+        return projectRepository.findById(projectId).orElseThrow(
+                () -> new EntityNotFoundException(Project.class,"this " + projectId)
+        );
+    }
 
 }

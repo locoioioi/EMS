@@ -2,8 +2,12 @@ package com.employee_management_system.EMS.utils;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.stream.Stream;
+
+@Configuration
 @Converter(autoApply = true)
 public class PermissionTypeConverter implements AttributeConverter<PermissionType,String> {
     @Override

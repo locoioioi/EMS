@@ -46,7 +46,9 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public ResponseEntity<?> register(CreationUser creationUser) {
         User user = userMapper.toUser(creationUser);
-        bCryptPasswordEncoder.encode(user.getPassword());
+        user.getEmployeeInformation().setUser(user);
+        String encodePassword = bCryptPasswordEncoder.encode(user.getPassword());
+        user.setPassword(encodePassword);
         User saved = userRepository.saveAndFlush(user);
         return ResponseEntity.ok(userMapper.toDto(saved));
     }

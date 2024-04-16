@@ -84,4 +84,11 @@ public class Project {
         }
         employees.remove(employee);
     }
+
+    public void addPermission(ProjectPermission projectPermission) {
+        if (permissions == null) {
+            permissions = new ArrayList<>();
+        }
+        permissions.add(projectPermission);
+    }
 }
