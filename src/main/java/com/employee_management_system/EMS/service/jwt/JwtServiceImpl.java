@@ -6,15 +6,18 @@ import com.employee_management_system.EMS.exception.EntityNotFoundException;
 import com.employee_management_system.EMS.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
@@ -22,8 +25,8 @@ public class JwtServiceImpl implements JwtService {
     private final UserRepository userRepository;
     private final static String SECRET_KEY = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
 
-    private SecretKey getKey() {
-        byte[] keyBytes = SECRET_KEY.getBytes();
+    private Key getKey() {
+        byte[] keyBytes = Decoders.BASE64URL.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
@@ -66,31 +69,31 @@ public class JwtServiceImpl implements JwtService {
                 .compact();
     }
 
-    private Claims extractAllClaims(String token) {
-        return Jwts
-                .parserBuilder()
+    public Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
                 .setSigningKey(getKey())
                 .build()
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)
                 .getBody();
     }
 
+    // extract specific claims
+    public <T> T extractClaim(String token, Function<Claims,T> claimsTFunction) {
+        final Claims claims = extractAllClaims(token);
+        return claimsTFunction.apply(claims);
+    }
+
+    // extract subject
+    public String extractSubject(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    // check token
+    public boolean isExpiredToken(String token) {
+        return extractClaim(token,Claims::getExpiration).before(new Date());
+    }
     @Override
-    public String getUsername(String token) {
-        Claims claims = extractAllClaims(token);
-        return claims.getSubject();
-    }
-
-    private Date getExpirationTime(String token) {
-        Claims claims = extractAllClaims(token);
-        return claims.getExpiration();
-    }
-
-    private boolean isExpireToken(String token) {
-        return extractAllClaims(token).getExpiration().before(new Date());
-    }
-
     public boolean isValidateToken(UserDetails userDetails, String token) {
-        return !isExpireToken(token) && userRepository.findByUsername(userDetails.getUsername()) != null;
+        return !isExpiredToken(token) && userDetails.getUsername().equals(extractSubject(token));
     }
 }

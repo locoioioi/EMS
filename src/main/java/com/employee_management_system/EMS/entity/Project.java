@@ -9,6 +9,7 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Data
@@ -70,6 +71,29 @@ public class Project {
             fetch = FetchType.LAZY
     )
     private List<ProjectTask> tasks;
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", status=" + status +
+                ", startDate=" + startDate +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Project project = (Project) o;
+        return id == project.id && Objects.equals(name, project.name) && status == project.status;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, status);
+    }
 
     public void addEmployee(Employee employee) {
         if (employees == null) {

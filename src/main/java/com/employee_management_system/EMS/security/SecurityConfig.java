@@ -34,6 +34,7 @@ public class SecurityConfig {
     public DaoAuthenticationProvider provider(UserService userService) {
         DaoAuthenticationProvider dap = new DaoAuthenticationProvider();
         dap.setUserDetailsService(userService);
+        dap.setPasswordEncoder(bCryptPasswordEncoder());
         return dap;
     }
     @Bean
@@ -50,7 +51,14 @@ public class SecurityConfig {
         http.authorizeHttpRequests(
                 request ->
                         request
-                                .requestMatchers(HttpMethod.POST,"/account/register").permitAll()
+                                // * [POST]
+                                .requestMatchers(HttpMethod.POST,Endpoints.POST_PUBLIC).permitAll()
+                                .requestMatchers(HttpMethod.POST,Endpoints.POST_ADMIN).hasAuthority("ROLE_ADMIN")
+                                // * [GET]
+                                .requestMatchers(HttpMethod.GET,Endpoints.GET_ADMIN).hasAuthority("ROLE_ADMIN")
+                                .requestMatchers(HttpMethod.GET,Endpoints.GET_EMPLOYEE).hasAuthority("ROLE_EMPLOYEE")
+                                // * [PUT]
+                                .requestMatchers(HttpMethod.PUT,Endpoints.PUT_EMPLOYEE).hasAuthority("ROLE_EMPLOYEE")
         );
         http.csrf(AbstractHttpConfigurer::disable);
         http.cors(

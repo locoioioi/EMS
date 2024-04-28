@@ -1,17 +1,22 @@
 package com.employee_management_system.EMS.service.account;
 
 import com.employee_management_system.EMS.dto.response.LoginRequest;
+import com.employee_management_system.EMS.dto.response.Response;
 import com.employee_management_system.EMS.dto.response.Token;
 import com.employee_management_system.EMS.dto.user.CreationUser;
 import com.employee_management_system.EMS.dto.user.UserMapper;
 import com.employee_management_system.EMS.entity.User;
+import com.employee_management_system.EMS.exception.EntityNotFoundException;
 import com.employee_management_system.EMS.exception.ExceptionResponse;
 import com.employee_management_system.EMS.repository.UserRepository;
 import com.employee_management_system.EMS.service.jwt.JwtService;
 import com.employee_management_system.EMS.service.user.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,21 +35,21 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public ResponseEntity<?> login(LoginRequest loginRequest) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),loginRequest.getPassword());
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
         Authentication authentication = authenticationManager.authenticate(authenticationToken);
         if (authentication.isAuthenticated()) {
-            // ? create jwt
             String accessToken = jwtService.generateAccessToken(loginRequest.getUsername());
             String refreshToken = jwtService.generateRefreshToken(loginRequest.getUsername());
-            Token token = new Token(accessToken,refreshToken);
-            return ResponseEntity.ok(token);
-        } else {
-            return ResponseEntity.badRequest().body(new ExceptionResponse("login fail",System.currentTimeMillis(),""));
+            Token token = new Token(accessToken, refreshToken);
+            return ResponseEntity.ok(
+                    new Response(HttpStatus.OK.value(), "Login Success", token)
+            );
         }
+        return ResponseEntity.badRequest().body(new ExceptionResponse("login fail",System.currentTimeMillis(),""));
     }
 
     @Override
-    public ResponseEntity<?> register(CreationUser creationUser) {
+    public ResponseEntity<?> register(@Valid CreationUser creationUser) {
         User user = userMapper.toUser(creationUser);
         user.getEmployeeInformation().setUser(user);
         String encodePassword = bCryptPasswordEncoder.encode(user.getPassword());
@@ -56,14 +61,17 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public ResponseEntity<?> refreshToken(String username,Token token) {
         UserDetails user = userService.loadUserByUsername(username);
+        if (user == null) {
+            throw new EntityNotFoundException(User.class, "this " + username);
+        }
         boolean isValid = jwtService.isValidateToken(user,token.getRefreshToken());
         if (!isValid) {
             Token refreshToken = new Token(
                     jwtService.generateAccessToken(username),
                     jwtService.generateRefreshToken(username)
             );
-            return ResponseEntity.ok(refreshToken);
+            return ResponseEntity.ok(new Response(HttpStatus.OK.value(),"refresh token successful", refreshToken));
         }
-        return ResponseEntity.badRequest().body(new ExceptionResponse("refresh token has expired",System.currentTimeMillis(),"fail to refresh token"));
+        return ResponseEntity.badRequest().body(new Response(HttpStatus.BAD_REQUEST.value(),"fail to refresh token", null));
     }
 }
