@@ -115,4 +115,12 @@ public class Project {
         }
         permissions.add(projectPermission);
     }
+
+    public void removePermissionByEmployee(Employee employee) {
+        List<ProjectPermission> permissionList = permissions.stream().filter(
+                projectPermission -> projectPermission.getEmployee().getId() == employee.getId()
+        ).toList();
+
+        permissions.removeAll(permissionList);
+    }
 }

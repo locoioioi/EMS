@@ -109,10 +109,20 @@ public class Employee {
         projects.add(project);
     }
 
+    public void removeProject(Project project) {
+        projects.remove(project);
+    }
+
     public void addPermission(ProjectPermission projectPermission) {
         if (permissions == null) {
             permissions = new ArrayList<>();
         }
         permissions.add(projectPermission);
+    }
+
+    public List<ProjectPermission> getPermissionByProject(Project project) {
+        return permissions.stream().filter(
+                projectPermission -> projectPermission.getProject().getId() == project.getId()
+        ).toList();
     }
 }

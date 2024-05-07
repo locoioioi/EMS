@@ -12,4 +12,5 @@ public interface ProjectService {
     boolean updateProject(int employeeId,ProjectDTO projectDTO);
     boolean removeProject(int projectId);
     ResponseEntity<?> addEmployeeToProject(int projectId, int projectManagerId, int employeeId, String permission);
+    ResponseEntity<?> removeEmployeeFromProject(int projectId, int projectManagerId, int employeeId);
 }

@@ -59,6 +59,8 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET,Endpoints.GET_EMPLOYEE).hasAuthority("ROLE_EMPLOYEE")
                                 // * [PUT]
                                 .requestMatchers(HttpMethod.PUT,Endpoints.PUT_EMPLOYEE).hasAuthority("ROLE_EMPLOYEE")
+                                // * [DELETE]
+                                .requestMatchers(HttpMethod.DELETE, Endpoints.DELETE_EMPLOYEE).hasAuthority("ROLE_EMPLOYEE")
         );
         http.csrf(AbstractHttpConfigurer::disable);
         http.cors(

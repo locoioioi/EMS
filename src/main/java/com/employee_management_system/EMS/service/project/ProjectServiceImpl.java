@@ -6,6 +6,7 @@ import com.employee_management_system.EMS.dto.response.Response;
 import com.employee_management_system.EMS.entity.*;
 import com.employee_management_system.EMS.exception.EntityNotFoundException;
 import com.employee_management_system.EMS.repository.EmployeeRepository;
+import com.employee_management_system.EMS.repository.ProjectPermissionRepository;
 import com.employee_management_system.EMS.repository.ProjectRepository;
 import com.employee_management_system.EMS.utils.PermissionType;
 import com.employee_management_system.EMS.utils.PermissionTypeConverter;
@@ -18,10 +19,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepository projectRepository;
+    private final ProjectPermissionRepository projectPermissionRepository;
     private final ProjectMapper projectMapper;
     private final EmployeeRepository employeeRepository;
     private final ProjectStatusConverter projectStatusConverter;
@@ -134,6 +139,40 @@ public class ProjectServiceImpl implements ProjectService {
 
         Project saved = projectRepository.saveAndFlush(project);
         return ResponseEntity.ok(new Response(HttpStatus.OK.value(),"add employee successful", projectMapper.toDto(saved)));
+    }
+
+    @Override
+    public ResponseEntity<?> removeEmployeeFromProject(int projectId, int projectManagerId, int employeeId) {
+        Project project = getProject(projectId);
+        if (project.getEmployee().getId() != projectManagerId) {
+            // * check permissionEmployee, only project manager can add employee.
+            return ResponseEntity.badRequest().body(new Response(HttpStatus.BAD_REQUEST.value(), "This employee do not have permissionEmployee to this service", projectManagerId));
+        }
+
+        Employee employee = employeeRepository.findById(employeeId).orElseThrow(
+                () -> new EntityNotFoundException(Employee.class, "this " + employeeId)
+        );
+        
+        if (!project.getEmployees().contains(employee)) {
+            return ResponseEntity.badRequest().body(new Response(HttpStatus.BAD_REQUEST.value(), "This employee is not available in project", null));
+        }
+
+        // * remove the employee
+        project.removeEmployee(employee);
+        employee.removeProject(project);
+
+        // * remove all the permission related to employee.
+        Optional<ProjectPermission> permissionToRemove = project.getPermissions().stream()
+                .filter(permission -> permission.getEmployee().getId() == employeeId)
+                .findFirst();
+        permissionToRemove.ifPresent(permission -> {
+            project.getPermissions().remove(permission);
+            projectPermissionRepository.delete(permission);
+        });
+
+        // * update
+        Project saved = projectRepository.saveAndFlush(project);
+        return ResponseEntity.ok(new Response(HttpStatus.OK.value(), "Remove successful", projectMapper.toDto(saved)));
     }
 
     private Project getProject(int projectId) {

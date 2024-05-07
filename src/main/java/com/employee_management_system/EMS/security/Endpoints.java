@@ -26,6 +26,10 @@ public class Endpoints {
 
     public static String[] PUT_EMPLOYEE = {
             "/projects",
-            "/projects/{projectId}/employees"
+            "/projects/{projectId}/employees/{employeeId}/add",
+    };
+
+    public static String[] DELETE_EMPLOYEE = {
+            "/projects/{projectId}/employees/{employeeId}/remove"
     };
 }

@@ -46,15 +46,28 @@ public class ProjectController {
         return ResponseEntity.badRequest().body(new Response(HttpStatus.BAD_REQUEST.value(), "Fail to update project",""));
     }
 
-    @PutMapping("/{projectId}/employees")
+    @PutMapping("/{projectId}/employees/{employeeId}/add")
     public ResponseEntity<?> addEmployeeToProject(
             @PathVariable(name = "projectId") int projectId,
             @RequestParam int projectManagerId,
-            @RequestParam int employeeId,
+            @PathVariable(name = "employeeId") int employeeId,
             @RequestParam String permission
     ) {
         try {
             return projectService.addEmployeeToProject(projectId, projectManagerId, employeeId, permission);
+        } catch (IllegalAccessError error) {
+            throw new RuntimeException("fail to add employee to project");
+        }
+    }
+
+    @DeleteMapping("/{projectId}/employees/{employeeId}/remove")
+    public ResponseEntity<?> removeEmployeeToProject(
+            @PathVariable(name = "projectId") int projectId,
+            @PathVariable(name = "employeeId") int employeeId,
+            @RequestParam int projectManagerId
+    ) {
+        try {
+            return projectService.removeEmployeeFromProject(projectId, projectManagerId, employeeId);
         } catch (IllegalAccessError error) {
             throw new RuntimeException("fail to add employee to project");
         }
